@@ -199,67 +199,66 @@ export const services: Tservices = [
 ];
 
 export const pages = [
-	{
-    	slug: 'terms_and_conditions',
-    	status: true,
-	},
-	{
-    	slug: 'privacy_policy',
-    	status: true,
-	},
-	{
-    	slug: 'about',
-    	status: true,
-	},
-	{
-    	slug: 'contact_us',
-    	status: true,
-	},
-          {
-    	slug: 'payment_terms',
-    	status: true,
-	},
-	{
-    	slug: 'warranty_policy',
-    	status: true,
-	},
-	{
-    	slug: 'company_policy',
-    	status: true,
-	},
-	{
-    	slug: 'service_center',
-    	status: true,
-	},
-	{
-    	slug: 'tech_support',
-    	status: true,
-	},
-	{
-    	slug: 'refund_return_policy',
-    	status: true,
-	},
-	{
-    	slug: 'home_page',
-    	theme: 'one',
-    	status: true,
-    	content: {
-        	hero: {
-            	heading: 'string',
-            	short_description: 'string',
-            	image1: 'string',
-            	image2: 'string',
-            	image3: 'string',
-        	},
-        	about: {
-            	heading: 'string',
-            	description: 'string',
-            	image: 'string',
-        	},
-    	},
-	},
-]
-
+    {
+        slug: 'terms_and_conditions',
+        status: true,
+    },
+    {
+        slug: 'privacy_policy',
+        status: true,
+    },
+    {
+        slug: 'about',
+        status: true,
+    },
+    {
+        slug: 'contact_us',
+        status: true,
+    },
+    {
+        slug: 'payment_terms',
+        status: true,
+    },
+    {
+        slug: 'warranty_policy',
+        status: true,
+    },
+    {
+        slug: 'company_policy',
+        status: true,
+    },
+    {
+        slug: 'service_center',
+        status: true,
+    },
+    {
+        slug: 'tech_support',
+        status: true,
+    },
+    {
+        slug: 'refund_return_policy',
+        status: true,
+    },
+    {
+        slug: 'home_page',
+        theme: 'one',
+        status: true,
+        content: {
+            hero: {
+                heading: 'string',
+                short_description: 'string',
+                image1: 'string',
+                image2: 'string',
+                image3: 'string',
+            },
+            about: {
+                heading: 'string',
+                description: 'string',
+                image: 'string',
+            },
+        },
+    },
+];
 
 export const sections = [
     {

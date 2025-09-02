@@ -20,12 +20,12 @@ router.post(
     ProductController.postProductsOrder,
 );
 
-router.get(
-    '/order',
-    auth('admin', 'user', 'employee'),
-    employeePermission('product_view'),
-    ProductController.getProductOrders,
-);
+// router.get(
+//     '/order',
+//     auth('admin', 'user', 'employee'),
+//     employeePermission('product_view'),
+//     ProductController.getProductOrders,
+// );
 router.patch(
     '/order',
     auth('admin', 'employee'),

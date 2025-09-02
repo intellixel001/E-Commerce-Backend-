@@ -19,14 +19,8 @@ router.get(
     employeePermission('product_view'),
     ProductCategoryController.getCategoryListByAdmin,
 );
-router.get(
-    '/site', 
-    ProductCategoryController.getCategoryListByPublic
-);
-router.get(
-    '/main',
-    ProductCategoryController.getOnlyMainCategoryListByPublic
-);
+router.get('/site', ProductCategoryController.getCategoryListByPublic);
+router.get('/main', ProductCategoryController.getOnlyMainCategoryListByPublic);
 router.put(
     '/',
     auth('admin', 'employee'),

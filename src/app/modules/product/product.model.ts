@@ -22,6 +22,8 @@ const schema = new Schema<TProduct>(
             type: [String],
             default: undefined,
         },
+        thumb_image: String,
+        banner_image: String,
         quantity: {
             type: Number,
             default: 1,
@@ -31,7 +33,16 @@ const schema = new Schema<TProduct>(
             discount: Number,
             discount_type: String,
         },
-        thumb_image: String,
+        section: [
+            {
+                type: String,
+                enum: {
+                    values: ['latest', 'featured'],
+                    message: '{VALUE} is not a valid role',
+                },
+                default: undefined,
+            },
+        ],
         status: {
             type: Boolean,
             default: true,
@@ -39,7 +50,12 @@ const schema = new Schema<TProduct>(
         category: {
             required: true,
             type: Schema.Types.ObjectId,
-            ref: 'project_category',
+            ref: 'product_category',
+        },
+        sub_category: {
+            required: true,
+            type: Schema.Types.ObjectId,
+            ref: 'product_category',
         },
     },
     { timestamps: true },

@@ -33,6 +33,14 @@ const postProductValidationSchema = z.object({
                 z.any(),
             )
             .optional(),
+        thumb_image: z.string({
+            invalid_type_error: 'Thumb image must be a string',
+            required_error: 'Thumb is required',
+        }),
+        banner_image: z.string({
+            invalid_type_error: 'Banner image must be a string',
+            required_error: 'Banner image is required',
+        }),
         images: z
             .array(
                 z.string({
@@ -79,13 +87,23 @@ const postProductValidationSchema = z.object({
                 message: 'Price must be object',
             },
         ),
-        thumb_image: z.string({
-            invalid_type_error: 'Thumb image must be a string',
-            required_error: 'Thumb is required',
-        }),
+        section: z
+            .array(
+                z.enum(['latest', 'featured'], {
+                    message: 'Section should be latest featured',
+                }),
+                {
+                    message: 'Section must be array',
+                },
+            )
+            .optional(),
         category: z.string({
             invalid_type_error: 'category id must be string',
             required_error: 'category id is required',
+        }),
+        sub_category: z.string({
+            invalid_type_error: 'sub_category id must be string',
+            required_error: 'sub_category id is required',
         }),
     }),
 });
@@ -134,6 +152,18 @@ const updateProductValidationSchema = z.object({
                 },
             )
             .optional(),
+        thumb_image: z
+            .string({
+                invalid_type_error: 'Thumb image must be a string',
+                required_error: 'Thumb is required',
+            })
+            .optional(),
+        banner_image: z
+            .string({
+                invalid_type_error: 'Banner image must be a string',
+                required_error: 'Banner image is required',
+            })
+            .optional(),
         quantity: z
             .number({
                 required_error: 'quantity must be a number',
@@ -146,10 +176,14 @@ const updateProductValidationSchema = z.object({
         price: z
             .object(
                 {
-                    amount: z.number({
-                        invalid_type_error: 'price amount must be a number',
-                        required_error: 'Price is required',
-                    }),
+                    amount: z
+                        .number({
+                            invalid_type_error: 'price amount must be a number',
+                            required_error: 'Price is required',
+                        })
+                        .nonnegative({
+                            message: 'Amount amount is nonnegative',
+                        }),
                     discount: z
                         .number({
                             invalid_type_error:
@@ -173,10 +207,21 @@ const updateProductValidationSchema = z.object({
                 },
             )
             .optional(),
-        thumb_image: z
-            .string({
-                invalid_type_error: 'Thumb image must be a string',
-                required_error: 'Thumb is required',
+
+        section: z
+            .array(
+                z.enum(['latest', 'featured'], {
+                    message: 'Section should be latest featured',
+                }),
+                {
+                    message: 'Section must be array',
+                },
+            )
+            .optional(),
+        status: z
+            .boolean({
+                invalid_type_error: 'status must be boolean',
+                required_error: 'status is required',
             })
             .optional(),
         category: z
@@ -185,12 +230,18 @@ const updateProductValidationSchema = z.object({
                 required_error: 'category id is required',
             })
             .optional(),
+        sub_category: z
+            .string({
+                invalid_type_error: 'sub_category id must be string',
+                required_error: 'sub_category id is required',
+            })
+            .optional(),
     }),
 });
 const postProductPaymentSchema = z.object({
     body: z.object({
-        method: z.enum(['stripe', 'paypal', 'razorpay'], {
-            message: 'Payment method should be stripe | paypal | razorpay',
+        method: z.enum(["sslcommerz"], {
+            message: 'Payment method should be sslcommerz',
         }),
     }),
 });

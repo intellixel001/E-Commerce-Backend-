@@ -51,8 +51,8 @@ export class ProductService {
             },
             {
                 $lookup: {
-                    from: 'project_categories',
-                    localField: 'category',
+                    from: 'product_categories',
+                    localField: 'sub_category',
                     pipeline: [
                         {
                             $project: {
@@ -61,12 +61,12 @@ export class ProductService {
                         },
                     ],
                     foreignField: '_id',
-                    as: 'category',
+                    as: 'sub_category',
                 },
             },
             {
                 $unwind: {
-                    path: '$category',
+                    path: '$sub_category',
                     preserveNullAndEmptyArrays: true,
                 },
             },

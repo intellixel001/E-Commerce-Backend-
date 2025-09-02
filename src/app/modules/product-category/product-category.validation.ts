@@ -45,11 +45,12 @@ const postProductCategoryValidationSchema = z.object({
                     },
                 )
                 .optional(),
-             image:z.string({
-                required_error:"image is required",
-                invalid_type_error:"image should be valid string"
-            })
-            .optional(),
+            image: z
+                .string({
+                    required_error: 'image is required',
+                    invalid_type_error: 'image should be valid string',
+                })
+                .optional(),
         })
         .strict(),
 });
@@ -109,11 +110,12 @@ const updateProductCategoryValidationSchema = z.object({
                     },
                 )
                 .optional(),
-             image:z.string({
-                required_error:"image is required",
-                invalid_type_error:"image should be valid string"
-            })
-            .optional(),    
+            image: z
+                .string({
+                    required_error: 'image is required',
+                    invalid_type_error: 'image should be valid string',
+                })
+                .optional(),
             status: z
                 .boolean({
                     invalid_type_error: 'status must be boolean',

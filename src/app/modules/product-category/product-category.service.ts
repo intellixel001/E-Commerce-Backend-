@@ -105,7 +105,7 @@ export class ProductCategoryService {
             {
                 $project: {
                     name: 1,
-                    image:1,
+                    image: 1,
                 },
             },
         ]);
