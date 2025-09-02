@@ -1,0 +1,8 @@
+node_modules
+public/
+.idea
+.vercel
+dist
+logs
+.env.dev
+# .env.prod
