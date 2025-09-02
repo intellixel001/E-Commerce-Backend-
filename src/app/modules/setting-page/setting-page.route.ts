@@ -4,7 +4,6 @@ import employeePermission from '../../middleware/employeePermission';
 import { SettingPageController } from './setting-page.controller';
 import validate from '../../middleware/validate';
 import { SettingPageValidations } from './setting-page.validation';
-import modePermission from '../../middleware/modePermission';
 const router = Router();
 router.patch(
     '/',

@@ -4,7 +4,6 @@ import { SettingLanguageValidations } from './setting-language.validation';
 import { Router } from 'express';
 import { SettingLanguageController } from './setting-language.controller';
 import employeePermission from '../../middleware/employeePermission';
-import modePermission from '../../middleware/modePermission';
 
 const router = Router();
 
