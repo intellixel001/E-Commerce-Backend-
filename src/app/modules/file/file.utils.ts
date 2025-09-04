@@ -5,27 +5,28 @@ import path, { resolve } from 'node:path';
 import * as fs from 'node:fs';
 import { SettingService } from '../setting/setting.service';
 export const cloudinaryUploadFile = async (file: any, folder: string) => {
-    return new Promise((resolve, reject) => {
-        cloudinary.v2.config({
+     cloudinary.v2.config({
             cloud_name: config.cloudinary_cloud_name,
             api_key: config.cloudinary_api_key,
             api_secret: config.cloudinary_api_secret,
-        });
+    });
 
+    return new Promise((resolve, reject) => {
         const options = {
             folder,
             use_filename: true,
             unique_filename: true,
         };
-
         const stream = cloudinary.v2.uploader.upload_stream(
             options,
             (error, result) => {
-                if (error) return reject(error);
+                if (error) {
+                    console.error("Cloudinary upload error:", error); // <- prevents silent crash
+                    return reject(error)
+                };
                 resolve(result?.secure_url || '');
             },
         );
-
         stream.end(file.data);
     });
 };

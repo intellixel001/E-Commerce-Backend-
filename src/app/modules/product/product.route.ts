@@ -26,13 +26,13 @@ router.post(
 //     employeePermission('product_view'),
 //     ProductController.getProductOrders,
 // );
-router.patch(
-    '/order',
-    auth('admin', 'employee'),
-    employeePermission('order_edit'),
-    validate(ProductValidations.updateProductOrderSchema),
-    ProductController.updateProductOrders,
-);
+// router.patch(
+//     '/order',
+//     auth('admin', 'employee'),
+//     employeePermission('order_edit'),
+//     validate(ProductValidations.updateProductOrderSchema),
+//     ProductController.updateProductOrders,
+// );
 
 router.get(
     '/',

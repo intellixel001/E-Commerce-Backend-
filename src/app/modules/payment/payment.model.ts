@@ -9,12 +9,12 @@ const schema = new Schema<TPayment>(
         },
         payment_type: {
             type: String,
-            enum: ['hotel', 'package', 'product'],
+            enum: ['product'],
             default: 'event',
         },
         method: {
             type: String,
-            enum: ['razorpay', 'stripe', 'paypal'],
+            enum: ['sslcommerz'],
         },
         status: {
             type: String,

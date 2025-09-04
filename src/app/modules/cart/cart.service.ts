@@ -71,6 +71,12 @@ export class CartService {
                     as: 'user',
                 },
             },
+             {
+                $unwind: {
+                    path: '$user',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
             {
                 $lookup: {
                     from: 'products',

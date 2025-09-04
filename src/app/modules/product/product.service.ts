@@ -18,6 +18,7 @@ export class ProductService {
     static async findProductById(_id: string | Types.ObjectId) {
         const data = await Product.findById(_id)
             .populate({ path: 'category', select: 'name' })
+            .populate({ path: 'sub_category', select: 'name' })
             .select('-updatedAt -__v')
             .lean();
         if (!data) {

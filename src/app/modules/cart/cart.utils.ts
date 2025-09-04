@@ -2,6 +2,7 @@ import { Types } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { SettingService } from '../setting/setting.service';
 import { CartService } from './cart.service';
+import Order from '../order/order.model';
 
 export const getUserCartCalculation = async (uid: Types.ObjectId) => {
     const filter = {
@@ -10,8 +11,19 @@ export const getUserCartCalculation = async (uid: Types.ObjectId) => {
     const setting = await SettingService.findSettingBySelect({
         delivery_charge: 1,
     });
+    const order = await Order.findOne({
+          user: new ObjectId(uid),
+          status:{
+             $in:['completed', 'accepted']
+          }
+    });
     const cart = await CartService.findCartCalculate(filter);
-    return setting.delivery_charge + (cart ? cart.total_price : 0);
+    const total =  (order ?  setting.delivery_charge : 0) + (cart ? cart.total_price : 0);
+    return {
+        total,
+        delivery_charge : order ? setting.delivery_charge : 0,
+        sub_total: cart ? cart.total_price : 0,
+    }
 };
 export const getUserCartProducts = async (uid: Types.ObjectId) => {
     const filter = {

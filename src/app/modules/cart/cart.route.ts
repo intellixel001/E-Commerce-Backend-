@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import validate from '../../middleware/validate';
 import auth from '../../middleware/auth';
-import employeePermission from '../../middleware/employeePermission';
 import { CartController } from './cart.controller';
 import { CartValidations } from './cart.validation';
 
