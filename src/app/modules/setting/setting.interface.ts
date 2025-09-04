@@ -32,12 +32,14 @@ export type TSetting = {
     };
     ssl_commerz: {
         credentials: {
-            client_id: String;
-            client_secret: String;
+            client_id: string;
+            client_secret: string;
+            is_live: boolean,
+
         };
-        is_active: Boolean;
-        logo: String;
-        name: String;
+        is_active: boolean;
+        logo: string;
+        name: string;
     };
     social_media_link: {
         name: string;

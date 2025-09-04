@@ -243,10 +243,8 @@ export class ProductController {
             status: 0,
             additional_info: 0,
             updatedAt: 0,
-            category:0,
             description:0,
             images:0,
-            quantity:0,
             section:0,
         };
         if (query._id) {

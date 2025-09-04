@@ -2,6 +2,10 @@ import { Types } from "mongoose";
 import { generateRandomNumber } from "../../utils/helpers";
 import Payment from "./payment.model";
 import { TUser } from "../user/user.interface";
+import { SettingService } from "../setting/setting.service";
+import AppError from "../../errors/AppError";
+// import SSLCommerzPayment from "sslcommerz-lts";
+import { HttpStatusCode } from "axios";
 
 export const generateTransactionId = async (
     prefix: string,
@@ -30,11 +34,22 @@ export const  executeSslcommerzPayment  = async(
      payment_type: string;
      order_id: Types.ObjectId;
      tran_id: string
-})=>{
-    //     const store_id = sslCommerzConfig?.config?.clientId;
-    //     const store_passwd = sslCommerzConfig?.config?.clientSecret;
-    //     const is_live = sslCommerzConfig?.config?.is_live
-    //     const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
+})=>{  
+    const setting = await SettingService.findSettingBySelect({
+        ssl_commerz:1
+    })
+    if (!setting.ssl_commerz.is_active) {
+        throw new AppError(
+            HttpStatusCode.BadRequest,
+            'Request Failed !',
+            "ssl_commerz payment gateway is currently inactive. Please contact our Help & Support team'"
+        );
+    }
+
+        const store_id = setting?.ssl_commerz?.credentials.client_id;
+        const store_passwd = setting?.ssl_commerz?.credentials.client_secret;
+        const is_live = setting?.ssl_commerz?.credentials.is_live;
+        // const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
     //     const customerAddress = user.address || user.address || 'N/A';
 
     //             const data = {

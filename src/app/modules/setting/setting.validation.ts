@@ -253,6 +253,10 @@ const postSettingValidationSchema = z.object({
                                 required_error: 'client_secret is required',
                             })
                             .optional(),
+                        is_live:z.boolean({
+                            invalid_type_error:'is_live must be boolean',
+                            required_error:'is_live is required',
+                        }).optional()    
                     }),
                     is_active: z
                         .boolean({

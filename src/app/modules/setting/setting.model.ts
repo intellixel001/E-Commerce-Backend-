@@ -1,5 +1,6 @@
 import { model, Schema } from 'mongoose';
 import { TSetting } from './setting.interface';
+import { boolean } from 'zod';
 
 const schema = new Schema<TSetting>(
     {
@@ -61,6 +62,7 @@ const schema = new Schema<TSetting>(
             credentials: {
                 client_id: String,
                 client_secret: String,
+                is_live: Boolean,
             },
             is_active: Boolean,
             logo: String,

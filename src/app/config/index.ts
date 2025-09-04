@@ -4,13 +4,13 @@ const envPath: string = path.join(
     __dirname,
     '../../../',
     `.env.${process.env.NODE_ENV}`,
-);
+)
 dotenv.config({ path: envPath });
 export default {
     db_string: process.env.DB_STRING,
     port: process.env.PORT || 2025,
     website_name: process.env.WEBSITE_NAME,
-    node_env: process.env.NODE_ENV,
+    node_env: process.env.NODE_ENV || "dev",
 
     bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
     jwt_access_secret: process.env.JWT_ACCESS_SECRET,

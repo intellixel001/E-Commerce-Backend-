@@ -71,6 +71,7 @@ export class ProductService {
                     preserveNullAndEmptyArrays: true,
                 },
             },
+             
             {
                 $addFields: {
                     regular_price: '$price.amount',
