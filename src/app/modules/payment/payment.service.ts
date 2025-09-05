@@ -31,7 +31,7 @@ export class PaymentService {
     static updatePayment = async (
         query: Record<string, string | Types.ObjectId>,
         updateDocument: any,
-        session = undefined,
+        session : ClientSession,
     ) => {
         const options = {
             new: true,

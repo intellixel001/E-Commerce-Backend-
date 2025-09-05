@@ -1,4 +1,3 @@
-import config from './index';
 import mongoose from 'mongoose';
 
 const connectMongo = async (db_string: string): Promise<void> => {

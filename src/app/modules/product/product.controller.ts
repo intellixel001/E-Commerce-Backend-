@@ -8,17 +8,20 @@ import { deleteFiles } from '../file/file.utils';
 import mongoose, { Types } from 'mongoose';
 import { getUserCartCalculation, getUserCartProducts } from '../cart/cart.utils';
 import { PaymentService } from '../payment/payment.service';
-import { executeSslcommerzPayment, generateTransactionId } from '../payment/payment.utils';
+import { 
+    executeSslcommerzPayment,
+    generateTransactionId
+} from '../payment/payment.utils';
 import { OrderService } from '../order/order.service';
 import { generateOrderID } from '../order/order.utils';
+import { TUser } from '../user/user.interface';
 import { CartService } from '../cart/cart.service';
 
 export class ProductController {
     static postProducts = catchAsync(async (req, res) => {
         const { body } = req.body;
-        const exist = await ProductService.findProductByQuery(
-            {
-                name: body.name,
+        const exist = await ProductService.findProductByQuery({
+                name: body.name 
             },
             false,
         );
@@ -65,6 +68,7 @@ export class ProductController {
         session.startTransaction();
         try {
             const cart = await getUserCartCalculation(user._id);
+            const tran_id = await generateTransactionId('Tx');
             const products: Types.ObjectId[] = await getUserCartProducts(
                 user._id,
             );
@@ -76,7 +80,7 @@ export class ProductController {
                     payment_type: 'product',
                     method: body.method,
                     status: 'pending',
-                    transaction_id: await generateTransactionId('Tx'),
+                    transaction_id: tran_id,
                     amount : cart.total,
                 },
                 session,
@@ -94,16 +98,20 @@ export class ProductController {
                 session,
             );
             const payload: {
+                user: TUser,
                 amount: number;
                 payment_type: string;
-                booking_id: Types.ObjectId;
+                order_id: Types.ObjectId;
+                tran_id: string
             } = {
+                user,
                 amount: cart.total,
                 payment_type: 'product',
-                booking_id: order._id.toString(),
+                order_id: order._id.toString(),
+                tran_id: tran_id
             };
             if (body.method == 'sslcommerz') {
-                // data = await executeSslcommerzPayment(payload);
+                data = await executeSslcommerzPayment(payload);
             } else {
                 new AppError(
                     HttpStatusCode.BadRequest,
@@ -112,9 +120,9 @@ export class ProductController {
                 );
             }
             await session.commitTransaction();
-            // await CartService.deleteCartByQuery({
-            //     user: new ObjectId(user._id),
-            // });
+            await CartService.deleteCartByQuery({
+                user: new ObjectId(user._id),
+            });
             sendResponse(res, {
                 statusCode: HttpStatusCode.Ok,
                 success: true,

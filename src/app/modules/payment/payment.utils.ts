@@ -4,7 +4,7 @@ import Payment from "./payment.model";
 import { TUser } from "../user/user.interface";
 import { SettingService } from "../setting/setting.service";
 import AppError from "../../errors/AppError";
-// import SSLCommerzPayment from "sslcommerz-lts";
+import SSLCommerzPayment from "sslcommerz-lts";
 import { HttpStatusCode } from "axios";
 
 export const generateTransactionId = async (
@@ -36,7 +36,10 @@ export const  executeSslcommerzPayment  = async(
      tran_id: string
 })=>{  
     const setting = await SettingService.findSettingBySelect({
-        ssl_commerz:1
+        ssl_commerz:1,
+        client_side_url:1,
+        server_side_url:1,
+        site_name:1
     })
     if (!setting.ssl_commerz.is_active) {
         throw new AppError(
@@ -46,32 +49,42 @@ export const  executeSslcommerzPayment  = async(
         );
     }
 
-        const store_id = setting?.ssl_commerz?.credentials.client_id;
-        const store_passwd = setting?.ssl_commerz?.credentials.client_secret;
-        const is_live = setting?.ssl_commerz?.credentials.is_live;
-        // const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
-    //     const customerAddress = user.address || user.address || 'N/A';
-
-    //             const data = {
-    //                 total_amount: parseFloat(subsPrice),
-    //                 currency: 'BDT',
-    //                 tran_id: uid,
-    //                 success_url: `${process.env.BACKEND_URL}/api/subscription/sslcommerz/success?session_id=${uid}`,
-    //                 fail_url: `${process.env.FRONTEND_URL}/api/subscription/sslcommerz/cancel`,
-    //                 cancel_url: `${process.env.FRONTEND_URL}/api/subscription/sslcommerz/cancel`,
-    //                 shipping_method: 'No',
-    //                 product_name: productName,
-    //                 product_category: 'Subscription',
-    //                 product_profile: 'general',
-    //                 cus_name: user.name,
-    //                 cus_email: user.email,
-    //                 cus_add1: customerAddress,
-    //                 cus_city: user.city || 'N/A',
-    //                 cus_state: user.state || 'N/A',
-    //                 cus_postcode: user.postcode || 'N/A',
-    //                 cus_country: user.country || 'Bangladesh',
-    //                 cus_phone: user.phone || 'N/A',
-    //             };
-
-    //  const apiResponse = await sslcz.init(data);
+    const store_id:string = setting?.ssl_commerz?.credentials.client_id;
+    const store_passwd:string = setting?.ssl_commerz?.credentials.client_secret;
+    const is_live:boolean = setting?.ssl_commerz?.credentials.is_live;
+    
+    const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
+        const data = {
+                    total_amount: amount,
+                    currency: 'BDT',
+                    tran_id: tran_id,
+                    success_url: `${setting.client_side_url}/sslcommerz/success?session_id=${order_id}`,
+                    fail_url: `${setting.client_side_url}/sslcommerz/cancel`,
+                    cancel_url: `${setting.client_side_url}/sslcommerz/cancel`,
+                    ipn_url:`${setting.server_side_url}/api/v1/payments/sslcommerz`,
+                    shipping_method: 'No',
+                    product_name: setting.site_name || "N/A",
+                    product_category: 'Payment',
+                    product_profile: 'general',
+                    cus_name: user.name,
+                    cus_email: user.email,
+                    cus_add1: user.address|| 'N/A',
+                    cus_city: user.city || 'N/A',
+                    cus_state: user.state || 'N/A',
+                    cus_postcode: user.zip_code || 'N/A',
+                    cus_country: user.country || 'Bangladesh',
+                    cus_phone: user.phone || 'N/A',
+                };
+     const apiResponse = await sslcz.init(data);
+     if(apiResponse.status != "SUCCESS"){
+         throw new AppError(
+            HttpStatusCode.BadRequest,
+            'Request Failed !',
+            `Unable to create payment session. Response status: ${apiResponse.status}`
+        );
+     }
+     return {
+        url: apiResponse.redirectGatewayURL,
+        id: apiResponse.sessionkey
+     }
 }

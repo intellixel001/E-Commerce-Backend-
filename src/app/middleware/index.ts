@@ -22,13 +22,7 @@ const customHeader = (
     res.header('Access-Control-Allow-Methods', 'GET, PUT, DELETE, OPTIONS');
     next();
 };
-const customJson = (req: Request, res: Response, next: NextFunction): void => {
-    if (req.originalUrl == '/api/v1/payments/stripe/webhook') {
-        express.raw({ type: 'application/json' })(req, res, next);
-    } else {
-        express.json()(req, res, next);
-    }
-};
+
 const middleware = [
     morgan(config.node_env == 'dev' ? 'dev' : 'combined'),
     compression(),
@@ -43,7 +37,7 @@ const middleware = [
     cookieParser(),
     express.urlencoded({ extended: true }),
     customHeader,
-    customJson,
+    express.json(),
     cors({ credentials: true }),
 ];
 export default middleware;

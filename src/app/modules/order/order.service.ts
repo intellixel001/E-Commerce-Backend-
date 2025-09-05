@@ -162,7 +162,7 @@ export class OrderService {
     static async updateOrder(
         query: Record<string, string | boolean | number>,
         updatedDocument: Record<string, string | boolean | number>,
-        section = undefined,
+        section :ClientSession,
     ) {
         const options = {
             section,
