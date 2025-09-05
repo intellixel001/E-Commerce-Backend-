@@ -80,7 +80,7 @@ export const  executeSslcommerzPayment  = async(
          throw new AppError(
             HttpStatusCode.BadRequest,
             'Request Failed !',
-            `Unable to create payment session. Response status: ${apiResponse.status}`
+            `Unable to create payment session. Response status: ${apiResponse}`
         );
      }
      return {
