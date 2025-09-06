@@ -217,6 +217,7 @@ export class ProductController {
         const select = {
             __v: 0,
             updatedAt: 0,
+            review : 0
         };
         const dataList = await ProductService.findProductsWithPagination(
             filter,
@@ -263,6 +264,7 @@ export class ProductController {
             description:0,
             images:0,
             section:0,
+            review : 0
         };
         if (query._id) {
             const data = await ProductService.findProductById(query._id);

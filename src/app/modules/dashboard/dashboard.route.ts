@@ -7,10 +7,9 @@ const router = Router();
 
 router.get(
     '/',
-    auth('user', 'admin', 'employee'),
+    auth('admin', 'employee'),
     employeePermission('dashboard_view'),
     DashboardController.getDashboard,
 );
-router.get('/all-filter', DashboardController.getAllFilter);
 
 export const dashboardRoutes: Router = router;

@@ -1,24 +1,15 @@
 import { catchAsync } from '../../utils/catchAsync';
 import { HttpStatusCode } from 'axios';
 import sendResponse from '../../utils/sendResponse';
+import { DashboardService } from './dashboard.service';
 
 export class DashboardController {
     static getDashboard = catchAsync(async (req, res) => {
-        const { user } = res.locals;
-        let data = null;
+        let data = await DashboardService.findDashboard();
         sendResponse(res, {
             statusCode: HttpStatusCode.Ok,
             success: true,
             message: 'Get dashboard successfully',
-            data,
-        });
-    });
-    static getAllFilter = catchAsync(async (req, res) => {
-        const data = null;
-        sendResponse(res, {
-            statusCode: HttpStatusCode.Ok,
-            success: true,
-            message: 'Get Filtered data successfully',
             data,
         });
     });

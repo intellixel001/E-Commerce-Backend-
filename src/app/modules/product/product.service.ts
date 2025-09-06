@@ -3,7 +3,6 @@ import { HttpStatusCode } from 'axios';
 import { Types } from 'mongoose';
 import Product from './product.model';
 import Review from '../review/review.model';
-
 export class ProductService {
     static async createProduct(payload: any) {
         const data = await Product.create(payload);
@@ -78,7 +77,24 @@ export class ProductService {
                     preserveNullAndEmptyArrays: true,
                 },
             },
-             
+            {
+               $lookup:{
+                   from:"reviews",
+                   let:{ product_id :"$_id"},
+                   pipeline:[{
+                        $match:{
+                            $expr:{
+                                $and:[
+                                    { $eq:["$product","$$product_id"]},
+                                    { $eq:["$is_deleted", false]},
+                                    { $eq:["$status", true]}
+                                ]
+                            }
+                        }
+                   }],
+                   as:"review"
+               }
+            }, 
             {
                 $addFields: {
                     regular_price: '$price.amount',
@@ -106,6 +122,9 @@ export class ProductService {
                             },
                         },
                     },
+                    avg_review: {
+                        $ifNull:[{ $avg: "$review.rating"} , 0]
+                    }
                 },
             },
             {
