@@ -72,6 +72,14 @@ export class ProductController {
             const products: Types.ObjectId[] = await getUserCartProducts(
                 user._id,
             );
+
+            if(!cart){
+                throw new AppError(
+                    HttpStatusCode.BadRequest,
+                    "Request Failed",
+                    "Your cart is empty. Please add items to your cart before proceeding to checkout"
+                )
+            }
             
             let data = null;
             const payment: any = await PaymentService.createPayment(
