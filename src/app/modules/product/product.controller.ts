@@ -72,8 +72,8 @@ export class ProductController {
             const products: Types.ObjectId[] = await getUserCartProducts(
                 user._id,
             );
-
-            if(!cart){
+            
+            if(!cart?.total){
                 throw new AppError(
                     HttpStatusCode.BadRequest,
                     "Request Failed",
