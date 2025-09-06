@@ -136,59 +136,59 @@ export class ProductController {
             await session.endSession();
         }
     });
-    // static getProductOrders = catchAsync(async (req, res) => {
-    //     const { query }: any = req;
-    //     const filter: any = {};
-    //     const { user } = res.locals;
-    //     if (user.role == 'user') {
-    //         filter['user'] = new ObjectId(user._id);
-    //     }
-    //     if (query.status) {
-    //         filter['status'] = query.status;
-    //     }
+    static getProductOrders = catchAsync(async (req, res) => {
+        const { query }: any = req;
+        const filter: any = {};
+        const { user } = res.locals;
+        if (user.role == 'user') {
+            filter['user'] = new ObjectId(user._id);
+        }
+        if (query.status) {
+            filter['status'] = query.status;
+        }
 
-    //     if (query.search) {
-    //         filter[`$or`] = [
-    //             { order_id: { $regex: new RegExp(query.search, 'i') } },
-    //             { name: { $regex: new RegExp(query.search, 'i') } },
-    //         ];
-    //     }
-    //     if (query._id) {
-    //         const data = await OrderService.findOrderById(query._id);
-    //         sendResponse(res, {
-    //             statusCode: HttpStatusCode.Ok,
-    //             success: true,
-    //             message: 'Order get successfully',
-    //             data,
-    //         });
-    //     }
-    //     const select = {
-    //         __v: 0,
-    //         updatedAt: 0,
-    //     };
-    //     const dataList = await OrderService.findOrdersWithPagination(
-    //         filter,
-    //         query,
-    //         select,
-    //     );
-    //     sendResponse(res, {
-    //         statusCode: HttpStatusCode.Ok,
-    //         success: true,
-    //         message: 'Order list get successfully',
-    //         data: dataList,
-    //     });
-    // });
-    // static updateProductOrders = catchAsync(async (req, res) => {
-        // const { body }: any = req.body;
-        // await OrderService.findOrderById(body._id);
-        // await OrderService.updateOrder({ _id: body._id }, body);
-        // sendResponse(res, {
-        //     statusCode: HttpStatusCode.Ok,
-        //     success: true,
-        //     message: 'Order updated successfully',
-        //     data: undefined,
-        // });
-    // });
+        if (query.search) {
+            filter[`$or`] = [
+                { order_id: { $regex: new RegExp(query.search, 'i') } },
+                { name: { $regex: new RegExp(query.search, 'i') } },
+            ];
+        }
+        if (query._id) {
+            const data = await OrderService.findOrderById(query._id);
+            sendResponse(res, {
+                statusCode: HttpStatusCode.Ok,
+                success: true,
+                message: 'Order get successfully',
+                data,
+            });
+        }
+        const select = {
+            __v: 0,
+            updatedAt: 0,
+        };
+        const dataList = await OrderService.findOrdersWithPagination(
+            filter,
+            query,
+            select,
+        );
+        sendResponse(res, {
+            statusCode: HttpStatusCode.Ok,
+            success: true,
+            message: 'Order list get successfully',
+            data: dataList,
+        });
+    });
+    static updateProductOrders = catchAsync(async (req, res) => {
+        const { body }: any = req.body;
+        await OrderService.findOrderById(body._id);
+        await OrderService.updateOrderIntoDB({ _id: body._id }, body);
+        sendResponse(res, {
+            statusCode: HttpStatusCode.Ok,
+            success: true,
+            message: 'Order updated successfully',
+            data: undefined,
+        });
+    });
     static getProductsByAdmin = catchAsync(async (req, res) => {
         const { query }: any = req;
         const filter: any = {};
@@ -198,6 +198,7 @@ export class ProductController {
 
         if (query._id) {
             const data = await ProductService.findProductById(query._id);
+            data.product_reviews = undefined;
             sendResponse(res, {
                 statusCode: HttpStatusCode.Ok,
                 success: true,

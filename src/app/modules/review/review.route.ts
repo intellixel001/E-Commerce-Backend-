@@ -9,38 +9,25 @@ router.post(
     '/',
     auth('user'),
     validate(ReviewPackageValidations.postReviewValidationSchema),
-    ReviewController.postReviewPackages,
-);
-router.post(
-    '/replay',
-    auth('user'),
-    validate(ReviewPackageValidations.postReplayValidationSchema),
-    ReviewController.postReplays,
+    ReviewController.postReview,
 );
 router.get(
-    '/package',
+    '/',
     auth('admin', 'employee'),
     employeePermission('review_view'),
-    ReviewController.getReviewPackagesByAdmin,
+    ReviewController.getReviewByAdmin,
 );
-
-router.get(
-    '/hotel',
-    auth('admin', 'employee'),
-    employeePermission('review_view'),
-    ReviewController.getReviewHotelsByAdmin,
-);
-router.put(
+router.patch(
     '/',
     auth('admin', 'employee'),
     employeePermission('review_edit'),
     validate(ReviewPackageValidations.updateReviewValidationSchema),
-    ReviewController.updateReviewPackages,
+    ReviewController.updateReviewByAdmin,
 );
 router.delete(
     '/:id',
-    auth('admin', 'employee', 'user'),
+    auth('admin', 'employee'),
     employeePermission('review_delete'),
-    ReviewController.deleteReviewPackages,
+    ReviewController.deleteReviewByAdmin,
 );
 export const reviewRoutes: Router = router;

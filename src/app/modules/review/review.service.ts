@@ -2,6 +2,7 @@ import AppError from '../../errors/AppError';
 import { HttpStatusCode } from 'axios';
 import { Types } from 'mongoose';
 import ReviewPackage from './review.model';
+import Review from './review.model';
 export class ReviewService {
     static async createReviewPackage(payload: any) {
         const data = await ReviewPackage.create(payload);
@@ -49,64 +50,12 @@ export class ReviewService {
         }
         return data;
     }
-    static async findReviewPackagesWithPagination(
+    static async findReviewWithPagination(
         filter: Record<string, string | boolean | number>,
         query: Record<string, string | boolean | number>,
         select: Record<string, string | boolean | number>,
     ) {
         const aggregate = ReviewPackage.aggregate([
-            {
-                $match: {
-                    package: {
-                        $exists: true,
-                    },
-                },
-            },
-            {
-                $lookup: {
-                    from: 'replays',
-                    let: { id: '$_id' },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $eq: ['$package_review', '$$id'],
-                                },
-                            },
-                        },
-                        {
-                            $lookup: {
-                                from: 'users',
-                                foreignField: '_id',
-                                pipeline: [
-                                    {
-                                        $project: {
-                                            name: 1,
-                                            image: 1,
-                                        },
-                                    },
-                                ],
-                                localField: 'user',
-                                as: 'user',
-                            },
-                        },
-                        {
-                            $unwind: {
-                                path: '$user',
-                                preserveNullAndEmptyArrays: true,
-                            },
-                        },
-                        {
-                            $project: {
-                                user: 1,
-                                comment: 1,
-                                createdAt: 1,
-                            },
-                        },
-                    ],
-                    as: 'replay',
-                },
-            },
             {
                 $lookup: {
                     from: 'users',
@@ -135,9 +84,9 @@ export class ReviewService {
             },
             {
                 $lookup: {
-                    from: 'packages',
+                    from: 'products',
                     foreignField: '_id',
-                    localField: 'package',
+                    localField: 'product',
                     pipeline: [
                         {
                             $project: {
@@ -147,42 +96,13 @@ export class ReviewService {
                             },
                         },
                     ],
-                    as: 'package',
+                    as: 'product',
                 },
             },
             {
                 $unwind: {
-                    path: '$package',
+                    path: '$product',
                     preserveNullAndEmptyArrays: true,
-                },
-            },
-            {
-                $addFields: {
-                    rating: {
-                        $divide: [
-                            {
-                                $sum: [
-                                    '$location',
-                                    '$service',
-                                    '$amenities',
-                                    '$price',
-                                    '$room',
-                                ],
-                            },
-                            5,
-                        ],
-                    },
-                },
-            },
-            {
-                $addFields: {
-                    replay: {
-                        $cond: [
-                            { $gt: [{ $size: '$replay' }, 0] },
-                            '$replay',
-                            '$$REMOVE',
-                        ],
-                    },
                 },
             },
             {
@@ -503,18 +423,9 @@ export class ReviewService {
         }
         return data;
     }
-    static async deleteReviewPackageById(_id: string | Types.ObjectId) {
-        const data =
-            await ReviewPackage.findByIdAndDelete(_id).select(
-                '-updatedAt -__v',
-            );
-        if (!data) {
-            throw new AppError(
-                HttpStatusCode.NotFound,
-                'Request failed !',
-                'Review not found. please check your review id and try again',
-            );
-        }
-        return data;
+    static async deleteReviewPackageById(_id:  Types.ObjectId | string) {
+        await Review.findByIdAndUpdate(_id , {
+            is_deleted: true
+        });
     }
 }

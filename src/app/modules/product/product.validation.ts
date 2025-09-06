@@ -243,7 +243,7 @@ const postProductPaymentSchema = z.object({
         method: z.enum(["sslcommerz"], {
             message: 'Payment method should be sslcommerz',
         }),
-    }),
+    }).strict(),
 });
 const updateProductOrderSchema = z.object({
     body: z.object({
@@ -255,10 +255,10 @@ const updateProductOrderSchema = z.object({
             .refine((data) => Types.ObjectId.isValid(data), {
                 message: 'Product id is invalid',
             }),
-        status: z.enum(['pending', 'accepted', 'cancelled'], {
+        status: z.enum(['pending', 'accepted', 'cancelled' ,"completed"], {
             message: 'status must be accepted or cancelled or pending',
         }),
-    }),
+    }).strict(),
 });
 export const ProductValidations = {
     postProductValidationSchema,

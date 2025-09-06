@@ -1,14 +1,10 @@
 import { Types } from 'mongoose';
 
-export type TReviewPackage = {
-    location: number;
-    service: number;
-    amenities: number;
-    price: number;
-    room: number;
-    comment: string | undefined;
+export type TReview = {
+    comment?: string ;
+    rating : number;
     status: boolean;
     user: Types.ObjectId;
-    package: Types.ObjectId;
-    hotel: Types.ObjectId;
+    product:Types.ObjectId;
+    is_deleted: boolean
 };

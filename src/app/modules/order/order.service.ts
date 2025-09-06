@@ -123,7 +123,6 @@ export class OrderService {
                     preserveNullAndEmptyArrays: true,
                 },
             },
-
             {
                 $lookup: {
                     from: 'payments',
@@ -162,10 +161,42 @@ export class OrderService {
     static async updateOrder(
         query: Record<string, string | boolean | number>,
         updatedDocument: Record<string, string | boolean | number>,
-        section :ClientSession,
+        section :ClientSession ,
     ) {
         const options = {
             section,
+            new: true,
+        };
+        const data = await Order.findOneAndUpdate(
+            query,
+            updatedDocument,
+            options,
+        )
+            .populate('payment')
+            .populate('user');
+
+        if (!data) {
+            throw new AppError(
+                HttpStatusCode.NotFound,
+                'Request failed !',
+                'The requested order could not be updated. Please try again later',
+            );
+        }
+        return data;
+    }
+        static async updateOrderIntoDB(
+        query: Record<string, string | Types.ObjectId>,
+        updatedDocument: Record<string, string >,
+    ) {
+        const order = await OrderService.findOrderById(query._id);
+        if(order.status == "cancelled" || order.status == "completed"){
+             throw new AppError(
+                HttpStatusCode.NotFound,
+                'Request failed !',
+                `This order has already been ${order.status} and cannot be updated.`,
+            );
+        }
+        const options = {
             new: true,
         };
         const data = await Order.findOneAndUpdate(

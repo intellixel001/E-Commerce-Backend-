@@ -2,6 +2,7 @@ import AppError from '../../errors/AppError';
 import { HttpStatusCode } from 'axios';
 import { Types } from 'mongoose';
 import Product from './product.model';
+import Review from '../review/review.model';
 
 export class ProductService {
     static async createProduct(payload: any) {
@@ -21,13 +22,19 @@ export class ProductService {
             .populate({ path: 'sub_category', select: 'name' })
             .select('-updatedAt -__v')
             .lean();
-        if (!data) {
+         
+        if(!data) {
             throw new AppError(
                 HttpStatusCode.NotFound,
                 'Request failed !',
                 'Product not found. please check product id and try again',
             );
         }
+        data.product_reviews = await Review.find({
+            product:data._id,
+            status:true,
+            is_deleted:false
+        }).select("-updatedAt -__v -is_deleted -product -user -status"); 
         return data;
     }
     static async findProductByQuery(filter: any, permission: boolean = true) {

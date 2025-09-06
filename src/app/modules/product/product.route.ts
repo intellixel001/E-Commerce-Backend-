@@ -20,19 +20,19 @@ router.post(
     ProductController.postProductsOrder,
 );
 
-// router.get(
-//     '/order',
-//     auth('admin', 'user', 'employee'),
-//     employeePermission('product_view'),
-//     ProductController.getProductOrders,
-// );
-// router.patch(
-//     '/order',
-//     auth('admin', 'employee'),
-//     employeePermission('order_edit'),
-//     validate(ProductValidations.updateProductOrderSchema),
-//     ProductController.updateProductOrders,
-// );
+router.get(
+    '/order',
+    auth('admin', 'user', 'employee'),
+    employeePermission('product_view'),
+    ProductController.getProductOrders,
+);
+router.patch(
+    '/order',
+    auth('admin', 'employee'),
+    employeePermission('order_edit'),
+    validate(ProductValidations.updateProductOrderSchema),
+    ProductController.updateProductOrders,
+);
 
 router.get(
     '/',
@@ -40,7 +40,10 @@ router.get(
     employeePermission('product_view'),
     ProductController.getProductsByAdmin,
 );
-router.get('/site', ProductController.getProductsByPublic);
+router.get(
+    '/site',
+    ProductController.getProductsByPublic
+);
 router.put(
     '/',
     auth('admin', 'employee'),
