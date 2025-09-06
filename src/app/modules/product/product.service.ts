@@ -34,7 +34,7 @@ export class ProductService {
             product:data._id,
             status:true,
             is_deleted:false
-        }).pupulate("user" , "name image").select("-updatedAt -__v -is_deleted -product -status"); 
+        }).populate("user" , "name image").select("-updatedAt -__v -is_deleted -product -status"); 
         return data;
     }
     static async findProductByQuery(filter: any, permission: boolean = true) {
