@@ -21,6 +21,10 @@ const schema = new Schema<TSetting>(
             type: Number,
             default: 0,
         },
+        min_product_price_free_delivery:{
+            type:Number,
+            default: 1000
+        },
         otp_verification_type: {
             type: String,
             enum: ['email', 'phone'],

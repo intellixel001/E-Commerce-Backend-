@@ -15,6 +15,7 @@ export type TSetting = {
     otp_verification_type?: 'email' | 'phone';
     file_upload_type: 'local' | 'cloudinary';
     delivery_charge: number;
+    min_product_price_free_delivery : number
     email_config: {
         default: string;
         sendgrid: {

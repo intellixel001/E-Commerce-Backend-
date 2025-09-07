@@ -10,6 +10,7 @@ export const getUserCartCalculation = async (uid: Types.ObjectId) => {
     };
     const setting = await SettingService.findSettingBySelect({
         delivery_charge: 1,
+        min_product_price_free_delivery:1
     });
     const order = await Order.findOne({
           user: new ObjectId(uid),
@@ -18,10 +19,12 @@ export const getUserCartCalculation = async (uid: Types.ObjectId) => {
           }
     });
     const cart = await CartService.findCartCalculate(filter);
-    const total =  (order ?  setting.delivery_charge : 0) + (cart ? cart.total_price : 0);
+    const total =  (!order &&  cart.total_price  > setting.min_product_price_free_delivery 
+                     ?   0 :setting.delivery_charge ) + (cart ? cart.total_price : 0);
     return {
         total,
-        delivery_charge : order ? setting.delivery_charge : 0,
+        delivery_charge : !order &&  cart.total_price  > setting.min_product_price_free_delivery 
+                     ? 0 : setting.delivery_charge ,
         sub_total: cart ? cart.total_price : 0,
     }
 };

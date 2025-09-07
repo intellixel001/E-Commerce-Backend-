@@ -105,6 +105,16 @@ const postSettingValidationSchema = z.object({
                         'delivery_charge must be greater than or equal to 0',
                 })
                 .optional(),
+            min_product_price_free_delivery  : z
+                .number({
+                    invalid_type_error: 'min_product_price_free_delivery must be number',
+                    required_error: 'min_product_price_free_delivery is required',
+                })
+                .nonnegative({
+                    message:
+                        'min_product_price_free_delivery must be greater than or equal to 0',
+                })
+                .optional(),  
             email_config: z
                 .object(
                     {

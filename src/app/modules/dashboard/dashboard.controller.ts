@@ -8,7 +8,7 @@ export class DashboardController {
         const {user} = res.locals;
         let data = null ;
         if(user.role == "user"){
-             data = await DashboardService.findDashboardByUser();
+             data = await DashboardService.findDashboardByUser(user);
         }else{
              data = await DashboardService.findDashboardByAdmin();
         }

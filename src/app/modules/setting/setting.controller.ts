@@ -47,6 +47,7 @@ export class SettingController {
             partner: 1,
             ssl_commerz: 1,
             delivery_charge: 1,
+            min_product_price_free_delivery:1
         };
         const data = await SettingService.findSettingBySelect(select);
         sendResponse(res, {

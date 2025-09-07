@@ -1,5 +1,6 @@
 import { Types } from 'mongoose';
 export type TUser = {
+    _id?: Types.ObjectId
     name: string;
     email?: string | undefined | null;
     phone?: string | undefined | null;

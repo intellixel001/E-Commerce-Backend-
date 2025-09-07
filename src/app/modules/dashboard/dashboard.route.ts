@@ -7,7 +7,7 @@ const router = Router();
 
 router.get(
     '/',
-    auth('admin', 'employee'),
+    auth('admin', 'employee' , "user"),
     employeePermission('dashboard_view'),
     DashboardController.getDashboard,
 );

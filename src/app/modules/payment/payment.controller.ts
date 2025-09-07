@@ -9,7 +9,7 @@ import { OrderService } from "../order/order.service";
 
 export class PaymentController {
     static updateSslcommerzPayment = catchAsync(async (req, res, next) => {
-            const {body} = req;
+            const {body} = req.body;
             const session = await mongoose.connection.startSession();
             session.startTransaction();
             if(body.status != "VALID"){
@@ -23,7 +23,7 @@ export class PaymentController {
                 transaction_id :body.tran_id,
             })
             try{
-              if(payment.status  == "panding"){
+              if(payment.status  == "pending"){
                  await PaymentService.updatePayment(
                    {_id: payment._id },
                    {status :"paid"},

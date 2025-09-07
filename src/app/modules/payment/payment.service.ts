@@ -41,7 +41,7 @@ export class PaymentService {
             query,
             updateDocument,
             options,
-        ).lean();
+        );
         return data;
     };
 }
