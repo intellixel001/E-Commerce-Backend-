@@ -239,9 +239,8 @@ export class ProductController {
                 $gt:0
             }
         };
-        const langCode = query.langCode || 'en';
         if (query.search) {
-            filter[`name.${langCode}`] = {
+            filter[`name`] = {
                 $regex: new RegExp(query.search, 'i'),
             };
         }
