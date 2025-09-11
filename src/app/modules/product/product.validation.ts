@@ -33,6 +33,20 @@ const postProductValidationSchema = z.object({
                 z.any(),
             )
             .optional(),
+        specifications:z.array(z.object({
+            key: z.string({
+                required_error:"key is required",
+                invalid_type_error:"key must be string"
+            }),
+            values:z.array(z.string({
+                required_error:"value is required",
+                invalid_type_error:"value must be string"
+            })).nonempty({
+                message:"At least one value is required"
+            })
+        }), {
+            invalid_type_error:"Specifications must be an array"
+        }),    
         thumb_image: z.string({
             invalid_type_error: 'Thumb image must be a string',
             required_error: 'Thumb is required',
@@ -105,7 +119,7 @@ const postProductValidationSchema = z.object({
             invalid_type_error: 'sub_category id must be string',
             required_error: 'sub_category id is required',
         }),
-    }),
+    }).strict(),
 });
 const updateProductValidationSchema = z.object({
     body: z.object({
@@ -141,6 +155,20 @@ const updateProductValidationSchema = z.object({
                 z.any(),
             )
             .optional(),
+        specifications:z.array(z.object({
+            key: z.string({
+                required_error:"key is required",
+                invalid_type_error:"key must be string"
+            }),
+            values:z.array(z.string({
+                required_error:"value is required",
+                invalid_type_error:"value must be string"
+            })).nonempty({
+                message:"At least one value is required"
+            })
+        }), {
+            invalid_type_error:"Specifications must be an array"
+        }).optional(),    
         images: z
             .array(
                 z.string({

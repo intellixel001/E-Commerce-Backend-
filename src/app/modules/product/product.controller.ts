@@ -248,13 +248,23 @@ export class ProductController {
             filter['category'] = new ObjectId(query.category);
         }
         if (query.sub_category) {
-            filter['sub_category'] = new ObjectId(query.sub_category);
+            filter['sub_category._id'] = new ObjectId(query.sub_category);
         }
         if(query.section){
              filter['section'] = {
                 $in:[query.section]
              }
         }
+        if(query?.review){
+            filter['avg_review'] = +query.review
+        } 
+        if(query?.maxPrice && query?.minPrice){
+            filter['final_price'] = {
+                 $lte: +query.maxPrice,
+                 $gte: +query.minPrice     
+            }
+        }
+        console.log(filter);
         const select = {
             __v: 0,
             status: 0,
@@ -263,7 +273,9 @@ export class ProductController {
             description:0,
             images:0,
             section:0,
-            review : 0
+            review : 0,
+            category: 0,
+            specifications:0
         };
         if (query._id) {
             const data = await ProductService.findProductById(query._id);

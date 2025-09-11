@@ -3,6 +3,10 @@ export interface TProduct {
     name: string;
     description: Map<string, string>;
     additional_info?: Map<string, any>;
+    specifications:[{
+        key: string,
+        values: string[]
+    }],
     images?: [string];
     thumb_image?: string;
     banner_image?: string;

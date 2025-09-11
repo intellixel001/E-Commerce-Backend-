@@ -18,6 +18,12 @@ const schema = new Schema<TProduct>(
             type: Schema.Types.Map,
             of: Schema.Types.Mixed,
         },
+        specifications:[
+            {
+                key:String,
+                values:[String]
+            }
+        ],
         images: {
             type: [String],
             default: undefined,

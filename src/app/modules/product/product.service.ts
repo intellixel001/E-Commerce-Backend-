@@ -54,9 +54,6 @@ export class ProductService {
     ) {
         const aggregate = Product.aggregate([
             {
-                $match: filter,
-            },
-            {
                 $lookup: {
                     from: 'product_categories',
                     localField: 'sub_category',
@@ -126,6 +123,9 @@ export class ProductService {
                         $ifNull:[{ $avg: "$review.rating"} , 0]
                     }
                 },
+            },
+            {
+                $match: filter,
             },
             {
                 $project: select,
