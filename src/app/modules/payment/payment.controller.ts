@@ -12,13 +12,6 @@ export class PaymentController {
             const {body} = req.body;
             const session = await mongoose.connection.startSession();
             session.startTransaction();
-            if(body.status != "VALID"){
-                throw new AppError(
-                 400,
-                'Request Failed !',
-                 `The transaction with ID ${body.tran_id} could not be completed. Status: ${body.status}. Please verify the payment details.`,
-            );
-            }
             const payment = await PaymentService.findPaymentByQuery({
                 transaction_id :body.tran_id,
             })
@@ -27,12 +20,12 @@ export class PaymentController {
                  await PaymentService.updatePayment(
                    {_id: payment._id },
                    {status :"paid"},
-                    session
+                    {session}
                  )
                 await OrderService.updateOrder(
                     { payment: payment._id },
                     {status :"accepted"},
-                    session
+                    {session}
                 )
               }
               
