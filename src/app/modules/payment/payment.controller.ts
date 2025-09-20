@@ -10,7 +10,7 @@ import { OrderService } from "../order/order.service";
 export class PaymentController {
     static updateSslcommerzPayment = catchAsync(async (req, res, next) => {
          const setting = await SettingService.findSettingBySelect({client_side_url:1})
-            const body = req?.body || req.query ;
+            const body = req?.body.body || req?.body ||  req.query ;
             const session = await mongoose.connection.startSession();
             session.startTransaction();
             const payment = await PaymentService.findPaymentByQuery({
