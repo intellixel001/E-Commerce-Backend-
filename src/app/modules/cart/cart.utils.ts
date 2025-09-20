@@ -22,7 +22,7 @@ export const getUserCartCalculation = async (uid: Types.ObjectId) => {
     const delivery_charge =  order &&  cart.total_price  > setting.min_product_price_free_delivery 
                      ?   0 : setting.delivery_charge;
     return {
-        total : cart ? (cart.total_price - delivery_charge) : 0,
+        total : cart ? (cart.total_price + delivery_charge) : 0,
         delivery_charge,
         sub_total: cart ? cart.total_price : 0,
     }
