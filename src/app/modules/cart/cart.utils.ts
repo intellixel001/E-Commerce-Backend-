@@ -19,7 +19,7 @@ export const getUserCartCalculation = async (uid: Types.ObjectId) => {
           }
  });
     const cart = await CartService.findCartCalculate(filter);
-    const delivery_charge =  order &&  cart.total_price  > setting.min_product_price_free_delivery 
+    const delivery_charge =  !order &&  cart.total_price  > setting.min_product_price_free_delivery 
                      ?   0 : setting.delivery_charge;
     return {
         total : cart ? (cart.total_price + delivery_charge) : 0,
