@@ -31,13 +31,13 @@ export class PaymentController {
               }
               
             await session.commitTransaction();
-            return res.redirect(` ${setting.client_side_url}/sslcommerz/success?session_id=${body.order_id}&tran_id=${body.tran_id}&amount=${body.amount}`);
-            // sendResponse(res, {
-            //     statusCode: HttpStatusCode.Ok,
-            //     success: true,
-            //     message: 'Payment completed successfully',
-            //     data: undefined,
-            // });
+            res.redirect(`${setting.client_side_url}/sslcommerz/success&tran_id=${body.tran_id}&amount=${body.amount}`);
+            sendResponse(res, {
+                statusCode: HttpStatusCode.Ok,
+                success: true,
+                message: 'Payment completed successfully',
+                data: undefined,
+            });
             } catch (error) {
                 console.log(error);
                 await session.abortTransaction();
