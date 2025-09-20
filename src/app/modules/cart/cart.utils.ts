@@ -12,19 +12,18 @@ export const getUserCartCalculation = async (uid: Types.ObjectId) => {
         delivery_charge: 1,
         min_product_price_free_delivery:1
     });
-    const order = await Order.findOne({
+   const order = await Order.findOne({
           user: new ObjectId(uid),
           status:{
              $in:['completed', 'accepted']
           }
-    });
+ });
     const cart = await CartService.findCartCalculate(filter);
-    const total =  (!order &&  cart.total_price  > setting.min_product_price_free_delivery 
-                     ?   0 :setting.delivery_charge ) + (cart ? cart.total_price : 0);
+    const delivery_charge =  order &&  cart.total_price  > setting.min_product_price_free_delivery 
+                     ?   0 : setting.delivery_charge;
     return {
-        total,
-        delivery_charge : !order &&  cart.total_price  > setting.min_product_price_free_delivery 
-                     ? 0 : setting.delivery_charge ,
+        total : cart ? (cart.total_price - delivery_charge) : 0,
+        delivery_charge,
         sub_total: cart ? cart.total_price : 0,
     }
 };
