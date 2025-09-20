@@ -9,7 +9,8 @@ import { OrderService } from "../order/order.service";
 
 export class PaymentController {
     static updateSslcommerzPayment = catchAsync(async (req, res, next) => {
-            const body = req.body;
+         const setting = await SettingService.findSettingBySelect({client_side_url:1})
+            const body = req?.body || req.query ;
             const session = await mongoose.connection.startSession();
             session.startTransaction();
             const payment = await PaymentService.findPaymentByQuery({
@@ -30,12 +31,13 @@ export class PaymentController {
               }
               
             await session.commitTransaction();
-            sendResponse(res, {
-                statusCode: HttpStatusCode.Ok,
-                success: true,
-                message: 'Payment completed successfully',
-                data: undefined,
-            });
+            return res.redirect(` ${setting.client_side_url}/sslcommerz/success?session_id=${body.order_id}&tran_id=${body.tran_id}&amount=${body.amount}`);
+            // sendResponse(res, {
+            //     statusCode: HttpStatusCode.Ok,
+            //     success: true,
+            //     message: 'Payment completed successfully',
+            //     data: undefined,
+            // });
             } catch (error) {
                 console.log(error);
                 await session.abortTransaction();

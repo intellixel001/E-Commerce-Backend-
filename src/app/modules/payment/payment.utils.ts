@@ -52,13 +52,13 @@ export const  executeSslcommerzPayment  = async(
     const store_id:string = setting?.ssl_commerz?.credentials.client_id;
     const store_passwd:string = setting?.ssl_commerz?.credentials.client_secret;
     const is_live:boolean = setting?.ssl_commerz?.credentials.is_live;
-    
+    // ${setting.client_side_url}/sslcommerz/success?session_id=${order_id}&tran_id=${tran_id}&amount=${amount}
     const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
         const data = {
                     total_amount: amount,
                     currency: 'BDT',
                     tran_id: tran_id,
-                    success_url: `${setting.client_side_url}/sslcommerz/success?session_id=${order_id}&tran_id=${tran_id}&amount=${amount}`,
+                    success_url: `${setting.server_side_url}/api/v1/payments/sslcommerz?session_id=${order_id}&tran_id=${tran_id}&amount=${amount}`,
                     fail_url: `${setting.client_side_url}/sslcommerz/cancel`,
                     cancel_url: `${setting.client_side_url}/sslcommerz/cancel`,
                     ipn_url:`${setting.server_side_url}/api/v1/payments/sslcommerz`,
