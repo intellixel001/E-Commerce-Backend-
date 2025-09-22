@@ -271,6 +271,51 @@ const postProductPaymentSchema = z.object({
         method: z.enum(["sslcommerz"], {
             message: 'Payment method should be sslcommerz',
         }),
+        billing_info:z.object({
+            name: z
+            .string({
+                 invalid_type_error: 'name must be string',
+                required_error: 'name is required',
+            }),
+            email:
+            z.string({
+                 invalid_type_error: 'email must be string',
+                required_error: 'email is required',
+            })
+            .email({
+                message:"email must be valid email address"
+            }),
+            phone:z.string({
+                 invalid_type_error: 'phone must be string',
+                required_error: 'phone is required',
+            }),
+        
+            district:z.string({
+                 invalid_type_error: 'district must be string',
+                required_error: 'district is required',
+            })
+            .optional(),
+            city:z.string({
+                 invalid_type_error: 'city must be string',
+                required_error: 'city is required',
+            })
+            .optional(),
+            postal_code:z.string({
+                 invalid_type_error: 'postal code must be string',
+                required_error: 'postal code is required',
+            })
+            .optional(),
+            house_no:z.string({
+                 invalid_type_error: 'house_no must be string',
+                required_error: 'house_no is required',
+            })
+            .optional(),
+            apartment:z.string({
+                 invalid_type_error: 'apartment must be string',
+                required_error: 'apartment is required',
+            })
+            .optional(),
+        })
     }).strict(),
 });
 const updateProductOrderSchema = z.object({

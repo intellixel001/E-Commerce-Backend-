@@ -11,4 +11,14 @@ export type TOrder = {
     delivery_charge: number;
     payment: Types.ObjectId;
     user: Types.ObjectId;
+    billing_info:{
+        name: string;
+        email:string;
+        phone:string;
+        district:string;
+        city:string;
+        postal_code:string;
+        house_no:string;
+        apartment:string;
+    }
 };

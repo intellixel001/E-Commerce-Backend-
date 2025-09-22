@@ -37,6 +37,16 @@ const schema = new Schema<TOrder>(
             type: Schema.Types.ObjectId,
             ref: 'payment',
         },
+         billing_info:{
+            name: String,
+            email:String,
+            phone:String,
+            district:String,
+            city:String,
+            postal_code:String,
+            house_no:String,
+            apartment:String,
+        }
     },
     { timestamps: true },
 );

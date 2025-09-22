@@ -102,6 +102,7 @@ export class ProductController {
                     delivery_charge: cart.delivery_charge,
                     status: 'pending',
                     payment: payment._id,
+                    billing_info:body.billing_info
                 },
                 session,
             );
