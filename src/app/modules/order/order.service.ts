@@ -1,8 +1,9 @@
 import Order from './order.model';
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
-import { ClientSession, Types } from 'mongoose';
+import mongoose, { ClientSession, Types } from 'mongoose';
 import { HttpStatusCode } from 'axios';
+import Payment from '../payment/payment.model';
 
 export class OrderService {
     static async createOrder(payload: any, session?: ClientSession) {
@@ -185,8 +186,8 @@ export class OrderService {
         return data;
     }
         static async updateOrderIntoDB(
-        query: Record<string, string | Types.ObjectId>,
-        updatedDocument: Record<string, string >,
+        query: Record<string, string | Types.ObjectId  >,
+        updatedDocument: Record<string, string  | undefined>,
     ) {
         const order = await OrderService.findOrderById(query._id);
         if(order.status == "cancelled" || order.status == "completed"){
@@ -195,6 +196,16 @@ export class OrderService {
                 'Request failed !',
                 `This order has already been ${order.status} and cannot be updated.`,
             );
+        }
+
+    
+        if(updatedDocument.payment_status){
+            await Payment.findOneAndUpdate({
+                _id : order.payment._id
+            } , {
+                status: "paid"
+            });
+            updatedDocument.payment_status = undefined
         }
         const options = {
             new: true,

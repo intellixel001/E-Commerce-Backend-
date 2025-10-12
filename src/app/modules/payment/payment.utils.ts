@@ -6,6 +6,7 @@ import { SettingService } from "../setting/setting.service";
 import AppError from "../../errors/AppError";
 import SSLCommerzPayment from "sslcommerz-lts";
 import { HttpStatusCode } from "axios";
+import { TBillingInfo } from "../order/order.interface";
 
 export const generateTransactionId = async (
     prefix: string,
@@ -27,13 +28,15 @@ export const  executeSslcommerzPayment  = async(
     amount,
     payment_type,
     order_id,
-    tran_id
+    tran_id,
+    billing_info
 }:{
      user: TUser
      amount: number;
      payment_type: string;
      order_id: Types.ObjectId;
      tran_id: string
+     billing_info: TBillingInfo
 })=>{  
     const setting = await SettingService.findSettingBySelect({
         ssl_commerz:1,
@@ -58,7 +61,7 @@ export const  executeSslcommerzPayment  = async(
                     total_amount: amount,
                     currency: 'BDT',
                     tran_id: tran_id,
-                    success_url: `${setting.server_side_url}/api/v1/payments/sslcommerz?session_id=${order_id}&tran_id=${tran_id}&amount=${amount}`,
+                    success_url: `${setting.client_side_url}/api/v1/payments/sslcommerz?session_id=${order_id}&tran_id=${tran_id}&amount=${amount}`,
                     fail_url: `${setting.client_side_url}/sslcommerz/cancel`,
                     cancel_url: `${setting.client_side_url}/sslcommerz/cancel`,
                     ipn_url:`${setting.server_side_url}/api/v1/payments/sslcommerz`,
@@ -74,6 +77,10 @@ export const  executeSslcommerzPayment  = async(
                     cus_postcode: user.zip_code || 'N/A',
                     cus_country: user.country || 'Bangladesh',
                     cus_phone: user.phone || 'N/A',
+                    ship_name: billing_info.name || 'Customer Name',
+                    ship_add1: billing_info.house_no || 'Dhaka',
+                    ship_city: billing_info.city || 'Dhaka',
+                    ship_country: 'Bangladesh',
                 };
      const apiResponse = await sslcz.init(data);
      if(apiResponse.status != "SUCCESS"){
@@ -84,7 +91,7 @@ export const  executeSslcommerzPayment  = async(
         );
      }
      return {
-        url: apiResponse.redirectGatewayURL,
+        url: apiResponse.GatewayPageURL,
         id: apiResponse.sessionkey
      }
 }

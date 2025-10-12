@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import { SettingService } from "../setting/setting.service";
 import { catchAsync } from "../../utils/catchAsync";
 import { PaymentService } from "./payment.service";
-import AppError from "../../errors/AppError";
+// import AppError from "../../errors/AppError";
 import { OrderService } from "../order/order.service";
 
 export class PaymentController {
@@ -31,7 +31,7 @@ export class PaymentController {
               }
               
             await session.commitTransaction();
-            res.redirect(`${setting.client_side_url}/sslcommerz/success?tran_id=${body.tran_id}&amount=${body.amount}`);
+            // res.redirect(`${setting.client_side_url}/sslcommerz/success?tran_id=${body.tran_id}&amount=${body.amount}`);
             sendResponse(res, {
                 statusCode: HttpStatusCode.Ok,
                 success: true,

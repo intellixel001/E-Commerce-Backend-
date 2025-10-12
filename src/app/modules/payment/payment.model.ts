@@ -14,7 +14,7 @@ const schema = new Schema<TPayment>(
         },
         method: {
             type: String,
-            enum: ['sslcommerz'],
+            enum: ['sslcommerz' , "cash"],
         },
         status: {
             type: String,

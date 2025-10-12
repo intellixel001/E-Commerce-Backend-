@@ -16,6 +16,7 @@ import { OrderService } from '../order/order.service';
 import { generateOrderID } from '../order/order.utils';
 import { TUser } from '../user/user.interface';
 import { CartService } from '../cart/cart.service';
+import { TBillingInfo } from '../order/order.interface';
 
 export class ProductController {
     static postProducts = catchAsync(async (req, res) => {
@@ -80,7 +81,6 @@ export class ProductController {
                     "Your cart is empty. Please add items to your cart before proceeding to checkout"
                 )
             }
-            
             let data = null;
             const payment: any = await PaymentService.createPayment(
                 {
@@ -100,7 +100,7 @@ export class ProductController {
                     products,
                     amount: cart.total,
                     delivery_charge: cart.delivery_charge,
-                    status: 'pending',
+                    status: body.method == 'cash' ? "accepted":  'pending',
                     payment: payment._id,
                     billing_info:body.billing_info
                 },
@@ -111,17 +111,19 @@ export class ProductController {
                 amount: number;
                 payment_type: string;
                 order_id: Types.ObjectId;
-                tran_id: string
+                tran_id: string,
+                billing_info: TBillingInfo
             } = {
                 user,
                 amount: cart.total,
                 payment_type: 'product',
                 order_id: order._id.toString(),
-                tran_id: tran_id
+                tran_id: tran_id,
+                billing_info:body.billing_info
             };
             if (body.method == 'sslcommerz') {
                 data = await executeSslcommerzPayment(payload);
-            } else {
+            } else if(body.method != 'cash') {
                 new AppError(
                     HttpStatusCode.BadRequest,
                     'Request Failed !',
@@ -136,7 +138,7 @@ export class ProductController {
                 statusCode: HttpStatusCode.Ok,
                 success: true,
                 message: 'Your payment is processing',
-                data,
+                data: body.method != 'cash' ? data : order,
             });
         } catch (error) {
             await session.abortTransaction();
