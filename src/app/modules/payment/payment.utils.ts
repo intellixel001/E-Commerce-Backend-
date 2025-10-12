@@ -61,7 +61,7 @@ export const  executeSslcommerzPayment  = async(
                     total_amount: amount,
                     currency: 'BDT',
                     tran_id: tran_id,
-                    success_url: `${setting.client_side_url}/api/v1/payments/sslcommerz?session_id=${order_id}&tran_id=${tran_id}&amount=${amount}`,
+                    success_url: `${setting.client_side_url}/sslcommerz/success?session_id=${order_id}&tran_id=${tran_id}&amount=${amount}`,
                     fail_url: `${setting.client_side_url}/sslcommerz/cancel`,
                     cancel_url: `${setting.client_side_url}/sslcommerz/cancel`,
                     ipn_url:`${setting.server_side_url}/api/v1/payments/sslcommerz`,
