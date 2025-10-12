@@ -31,7 +31,7 @@ export class PaymentController {
               }
               
             await session.commitTransaction();
-            // res.redirect(`${setting.client_side_url}/sslcommerz/success?tran_id=${body.tran_id}&amount=${body.amount}`);
+            res.redirect(`${setting.client_side_url}/sslcommerz/success?tran_id=${body.tran_id}&amount=${body.amount}`);
             sendResponse(res, {
                 statusCode: HttpStatusCode.Ok,
                 success: true,
