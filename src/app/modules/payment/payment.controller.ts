@@ -1,4 +1,4 @@
-import { HttpStatusCode } from "axios";
+import axios, { HttpStatusCode } from "axios";
 import sendResponse from "../../utils/sendResponse";
 import mongoose from "mongoose";
 import { SettingService } from "../setting/setting.service";
@@ -17,11 +17,34 @@ export class PaymentController {
                 transaction_id :body.tran_id,
             })
             try{
-              if(payment.status  == "pending"){
-                 await PaymentService.updatePayment(
-                   {_id: payment._id },
-                   {status :"paid"},
-                    session
+              // 2️⃣ Validate with SSLCommerz (IMPORTANT STEP)
+               const store_id:string = setting?.ssl_commerz?.credentials.client_id;
+              const store_passwd:string = setting?.ssl_commerz?.credentials.client_secret;
+              const is_live:boolean = setting?.ssl_commerz?.credentials.is_live;
+
+              const baseURL = is_live
+                 ? 'https://securepay.sslcommerz.com'
+                : 'https://sandbox.sslcommerz.com';
+
+              const validationUrl = `${baseURL}/validator/api/validationserverAPI.php`;
+
+              const { data: validation } = await axios.get(validationUrl, {
+                 params: {
+                  val_id: body.val_id, // comes from SSLCommerz success/IPN
+                  store_id,
+                  store_passwd,
+                  v: 1,
+                  format: 'json',
+                  },
+               });
+               console.log(validation);
+               console.log(body);
+                if (validation.status === 'VALID' || validation.status === 'VALIDATED') {
+                      if(payment.status  == "pending"){
+                       await PaymentService.updatePayment(
+                          {_id: payment._id },
+                          {status :"paid"},
+                        session
                  )
                 await OrderService.updateOrder(
                     { payment: payment._id },
@@ -29,7 +52,8 @@ export class PaymentController {
                     session
                 )
               }
-              
+            }
+            
             await session.commitTransaction();
             res.redirect(`${setting.client_side_url}/sslcommerz/success?tran_id=${body.tran_id}&amount=${body.amount}`);
             sendResponse(res, {
